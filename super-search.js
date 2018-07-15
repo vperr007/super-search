@@ -1,8 +1,7 @@
-/* super-search
-Author: Kushagra Gour (http://kushagragour.in)
-MIT Licensed
-*/
+//superSearch
 (function () {
+
+
 	var searchFile = '/feed.xml',
 		searchEl,
 		searchInputEl,
@@ -84,7 +83,9 @@ MIT Licensed
 
 		var matchingPosts = posts.filter(function (post) {
 			// Search `description` and `content` both to support 1.0 and 2.0 formats.
-			if ((post.title + '').toLowerCase().indexOf(currentInputValue) !== -1 || ((post.description || post.content) + '').toLowerCase().indexOf(currentInputValue) !== -1) {
+			if ((post.title + '').toLowerCase().indexOf(currentInputValue) !== -1 || ( post.description +'').toLowerCase().indexOf(currentInputValue) !== -1) {
+			// if ((post.title + '').toLowerCase().indexOf(currentInputValue) !== -1 || ((post.description || post.content) + '').toLowerCase().indexOf(currentInputValue) !== -1) {
+
 				return true;
 			}
 		});
@@ -95,8 +96,8 @@ MIT Licensed
 		if (matchingPosts.length && currentResultHash !== lastSearchResultHash) {
 			searchResultsEl.classList.remove('is-hidden');
 			searchResultsEl.innerHTML = matchingPosts.map(function (post) {
-				d = new Date(post.pubDate);
-				return '<li><a href="' + post.link + '">' + post.title + '<span class="super-search__result-date">' + d.toUTCString().replace(/.*(\d{2})\s+(\w{3})\s+(\d{4}).*/,'$2 $1, $3') + '</span></a></li>';
+				d = new Date(post.published);
+				return '<li><a href="' + post.id + '">' + post.title + '</a></li>';
 			}).join('');
 		}
 		lastSearchResultHash = currentResultHash;
@@ -137,8 +138,24 @@ MIT Licensed
 		});
 	}
 
+	//clear results if X is clicked
+	$('.super-search__close-btn').click(function() {
+			$('#js-super-search__results').empty();
+	});
+
+	//when the input is deleted, search results will be empty again
+	$('#js-super-search__input').keyup(function(e){
+		var value = $(this).val();
+		if(value.length < 1){
+			$('#js-super-search__results').empty();
+
+		}
+	});
+
 	init.toggle = toggleSearch;
 
 	window.superSearch = init;
+
+
 
 })();
